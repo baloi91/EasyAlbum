@@ -10,7 +10,7 @@ import Foundation
 
 public struct EasyAlbum {
         
-    private var albumNVC: EasyAlbumNAC?
+    var albumNVC: EasyAlbumNAC?
     
     private init(appName: String) {
         albumNVC = EasyAlbumNAC()
@@ -19,6 +19,10 @@ public struct EasyAlbum {
     
     public static func of(appName: String) -> EasyAlbum {
         return EasyAlbum(appName: appName)
+    }
+    
+    public func getController() -> EasyAlbumNAC? {
+        return albumNVC
     }
     
     /// NavigationBar tint color

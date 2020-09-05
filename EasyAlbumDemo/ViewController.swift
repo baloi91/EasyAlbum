@@ -21,7 +21,24 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
+//        setup()
+        let eacon = EasyAlbumNAC()
+        eacon.setDelegate(self)
+        self.addChild(eacon)
+        view.addSubview(eacon.view)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+//        EasyAlbum.of(appName: "EasyAlbum")
+//        .showCamera(false)
+//        .start(self, delegate: self)
+    }
+    
+    func fakeClick() {
+        print("Fake click")
+        let notif = Notification(name: NSNotification.Name("ConfirmClicked"), object: nil, userInfo: nil)
+        NotificationQueue.default.enqueue(notif, postingStyle: .whenIdle)
     }
     
     private func setup() {

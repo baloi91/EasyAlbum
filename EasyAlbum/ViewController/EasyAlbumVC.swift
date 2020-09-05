@@ -19,6 +19,8 @@ class EasyAlbumVC: UIViewController {
     var pickColor: UIColor = EasyAlbumCore.PICK_COLOR
     var crop: Bool = EasyAlbumCore.CROP
     var showCamera: Bool = EasyAlbumCore.SHOW_CAMERA
+    var showClose: Bool = EasyAlbumCore.SHOW_CLOSE
+    var showPreview: Bool = EasyAlbumCore.SHOW_PREVIEW
     var message: String = EasyAlbumCore.MESSAGE
     var sizeFactor: EasyAlbumSizeFactor = EasyAlbumCore.SIZE_FACTOR
     var orientation: UIInterfaceOrientationMask = EasyAlbumCore.ORIENTATION
@@ -67,6 +69,16 @@ class EasyAlbumVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(convertTask), name: NSNotification.Name("ConfirmClicked"), object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewDidLayoutSubviews() {
@@ -118,7 +130,7 @@ class EasyAlbumVC: UIViewController {
                                     style: .plain, target: self, action: #selector(close(_:)))
         let camera = UIBarButtonItem(image: UIImage.bundle(image: .camera),
                                      style: .plain, target: self, action: #selector(openCamera(_:)))
-        navigationItem.leftBarButtonItem = close
+        navigationItem.leftBarButtonItem = showClose ? close : nil
         navigationItem.rightBarButtonItem = showCamera ? camera : nil
         
         mRefreshCtrl = UIRefreshControl()
@@ -320,9 +332,8 @@ class EasyAlbumVC: UIViewController {
         mTitleBtn.setTitle(text, for: .normal)
     }
     
-    private func convertTask() {
+    @objc private func convertTask() {
         guard !isProcessing else { return }
-        
         isProcessing = true
         
         mToast?.show(with: LString(.photoProcess), autoCancel: false)
@@ -426,29 +437,36 @@ extension EasyAlbumVC: UICollectionViewDataSource, UICollectionViewDelegate, UIC
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard !isProcessing else { return }
         
-        // Get cell position relative `collectionView.contentOffset = .zero`
-        var cellFrame: CGRect = .zero
-        if let cell = collectionView.cellForItem(at: indexPath) as? AlbumPhotoCell {
-            let originX = cell.frame.minX
-            let relativeY = cell.center.y - collectionView.contentOffset.y
-            cellFrame = CGRect(origin: CGPoint(x: originX, y: relativeY), size: cell.frame.size)
+        if showPreview {
+            // Get cell position relative `collectionView.contentOffset = .zero`
+            var cellFrame: CGRect = .zero
+            if let cell = collectionView.cellForItem(at: indexPath) as? AlbumPhotoCell {
+                let originX = cell.frame.minX
+                let relativeY = cell.center.y - collectionView.contentOffset.y
+                cellFrame = CGRect(origin: CGPoint(x: originX, y: relativeY), size: cell.frame.size)
+            }
+            
+            let item = indexPath.item
+            
+            let previewVC = EasyAlbumPreviewPageVC(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+            previewVC.limit = limit
+            previewVC.pickColor = pickColor
+            previewVC.message = message
+            previewVC.orientation = orientation
+            previewVC.selectedItem = item
+            previewVC.mAlbumPhotos = mAlbumPhotos
+            previewVC.mSelectedPhotos = mSelectedPhotos
+            previewVC.cellFrame = cellFrame
+            previewVC.pageDelegate = self
+            previewVC.modalPresentationStyle = .overCurrentContext
+            
+            present(previewVC, animated: false, completion: nil)
         }
-        
-        let item = indexPath.item
-        
-        let previewVC = EasyAlbumPreviewPageVC(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
-        previewVC.limit = limit
-        previewVC.pickColor = pickColor
-        previewVC.message = message
-        previewVC.orientation = orientation
-        previewVC.selectedItem = item
-        previewVC.mAlbumPhotos = mAlbumPhotos
-        previewVC.mSelectedPhotos = mSelectedPhotos
-        previewVC.cellFrame = cellFrame
-        previewVC.pageDelegate = self
-        previewVC.modalPresentationStyle = .overCurrentContext
-        
-        present(previewVC, animated: false, completion: nil)
+        else {
+            if let cell = collectionView.cellForItem(at: indexPath) as? AlbumPhotoCell {
+                cell.mNumberBtn.sendActions(for: .touchUpInside)
+            }
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EasyAlbumNAC: UINavigationController {
+public class EasyAlbumNAC: UINavigationController {
         
     var appName: String = EasyAlbumCore.APP_NAME
     var tintColor: UIColor = EasyAlbumCore.TINT_COLOR
@@ -25,20 +25,24 @@ class EasyAlbumNAC: UINavigationController {
     
     weak var albumDelegate: EasyAlbumDelegate? = nil
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         setup()
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
+    public func setDelegate(_ del: EasyAlbumDelegate) {
+        albumDelegate = del
+    }
+    
+    public override var preferredStatusBarStyle: UIStatusBarStyle {
         return lightStatusBarStyle ? .lightContent : .default
     }
     
-    override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+    public override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
         return .fade
     }
     
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return orientation
     }
     
@@ -70,7 +74,6 @@ class EasyAlbumNAC: UINavigationController {
         albumVC.sizeFactor = sizeFactor
         albumVC.orientation = orientation
         albumVC.albumDelegate = albumDelegate
-        
         viewControllers = [albumVC]
     }
 }

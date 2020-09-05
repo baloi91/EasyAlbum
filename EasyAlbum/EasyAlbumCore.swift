@@ -64,13 +64,19 @@ struct EasyAlbumCore {
     static let SPAN: Int = 3
     
     /// Photo selected color，value = #ffc107
-    static let PICK_COLOR: UIColor =  UIColor(hex: "ffc107")
+    static let PICK_COLOR: UIColor =  UIColor(hex: "ff4197")
     
     /// When use camera want to crop after take picture，value = true
     static let CROP: Bool = false
     
     /// Want to show camera button on navigationBar，value = true
-    static let SHOW_CAMERA: Bool = true
+    static let SHOW_CAMERA: Bool = false
+    
+    /// Want to show close button on navigationBar，value = true
+    static let SHOW_CLOSE: Bool = false
+    
+    /// Want to show preview controller，value = true
+    static let SHOW_PREVIEW: Bool = false
     
     /// Device support orientation，value = .all
     static let ORIENTATION: UIInterfaceOrientationMask = .all
