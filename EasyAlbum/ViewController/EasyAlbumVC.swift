@@ -479,9 +479,12 @@ extension EasyAlbumVC: UICollectionViewDataSource, UICollectionViewDelegate, UIC
     func collectionView(_ collectionView: UICollectionView, cancelPrefetchingForItemsAt indexPaths: [IndexPath]) {
         guard mAlbumPhotos.count >= indexPaths.count else { return }
         
-        let assets = indexPaths.map({ mAlbumPhotos[$0.row].asset })
-        DispatchQueue.main.async {
-            self.photoManager.stopCacheImage(cancelPrefetchingForItemsAt: assets, options: .fast)
+        let myIndex = indexPaths.filter({ mAlbumPhotos.indices.contains($0.row) })
+        if myIndex.count > 0 {
+            let assets = myIndex.map({ mAlbumPhotos[$0.row].asset })
+            DispatchQueue.main.async {
+                self.photoManager.stopCacheImage(cancelPrefetchingForItemsAt: assets, options: .fast)
+            }
         }
     }
 }

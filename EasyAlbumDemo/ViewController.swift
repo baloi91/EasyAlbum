@@ -22,10 +22,18 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 //        setup()
-        let eacon = EasyAlbumNAC()
-        eacon.setDelegate(self)
-        self.addChild(eacon)
-        view.addSubview(eacon.view)
+//        let eacon = EasyAlbumNAC()
+//        eacon.setDelegate(self)
+//        self.addChild(eacon)
+//        view.addSubview(eacon.view)
+        
+        
+        let album = EasyAlbum.of(appName: "EasyAlbum")
+            .limit(1).showCamera(false)
+        if let controller = album.getController() {
+            addChild(controller)
+            view.addSubview(controller.view)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {

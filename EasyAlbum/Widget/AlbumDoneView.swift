@@ -39,7 +39,7 @@ class AlbumDoneView: UIView {
     
     /// Selected count，default = 0
     var number: Int = 0 {
-        didSet { mNumberLab?.text = "Selected (\(number))"}
+        didSet { mNumberLab?.text = "Select (\(number))"}
     }
     
     weak var delegate: AlbumDoneViewDelegate?
