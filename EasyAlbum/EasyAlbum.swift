@@ -141,7 +141,7 @@ public struct EasyAlbum {
             albumNVC?.modalPresentationStyle = .fullScreen
         }
         
-        viewController.present(albumNVC!, animated: true, completion: nil)
+        viewController.present(albumNVC!, animated: false, completion: nil)
     }
     
     /// Show photo picker
@@ -156,7 +156,7 @@ public struct EasyAlbum {
             albumNVC?.modalPresentationStyle = .fullScreen
         }
         
-        navigationController.present(albumNVC!, animated: true, completion: nil)
+        navigationController.present(albumNVC!, animated: false, completion: nil)
     }
     
     /*

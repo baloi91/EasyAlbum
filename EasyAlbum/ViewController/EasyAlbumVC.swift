@@ -333,7 +333,7 @@ class EasyAlbumVC: UIViewController {
     }
     
     @objc private func convertTask() {
-        guard !isProcessing else { return }
+        guard !isProcessing, mSelectedPhotos.count > 0 else { return }
         isProcessing = true
         
         mToast?.show(with: LString(.photoProcess), autoCancel: false)
