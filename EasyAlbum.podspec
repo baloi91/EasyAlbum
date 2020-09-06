@@ -9,7 +9,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "EasyAlbum"
-  spec.version      = "2.2.0"
+  spec.version      = "2.2.1"
   spec.summary      = "📷 A lightweight, pure-Swift library for pick up photo from ur album."
   spec.description  = <<-DESC
   📷 A lightweight, pure-Swift library can help u easy to pick up photo from album.
